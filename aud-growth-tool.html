@@ -1,0 +1,1564 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AUD地产学院运营增长工具</title>
+  <style>
+    :root {
+      --bg: #f5f8fc;
+      --surface: #ffffff;
+      --surface-soft: #eef5fc;
+      --line: #d7e3f0;
+      --line-strong: #bad0e8;
+      --text: #1b2b3d;
+      --muted: #607489;
+      --primary: #0f5fb8;
+      --primary-dark: #164674;
+      --primary-soft: #e4f0ff;
+      --teal: #0b8f8a;
+      --amber: #b66b00;
+      --danger: #b83742;
+      --shadow: 0 12px 28px rgba(24, 65, 110, 0.10);
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      background: var(--bg);
+      font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", Arial, sans-serif;
+      letter-spacing: 0;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+      letter-spacing: 0;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .app-header {
+      background: linear-gradient(135deg, #0c4f9a 0%, #0f6fc9 48%, #0b8f8a 100%);
+      color: #fff;
+      padding: 30px 28px 24px;
+    }
+
+    .header-inner {
+      max-width: 1320px;
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 4px 10px;
+      border: 1px solid rgba(255, 255, 255, 0.45);
+      border-radius: 999px;
+      color: #e9f5ff;
+      font-size: 13px;
+      background: rgba(255, 255, 255, 0.10);
+    }
+
+    h1 {
+      margin: 14px 0 8px;
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 1.12;
+      font-weight: 800;
+    }
+
+    .strategy {
+      max-width: 920px;
+      margin: 0;
+      font-size: clamp(17px, 2vw, 22px);
+      line-height: 1.5;
+      color: #f4fbff;
+      font-weight: 650;
+    }
+
+    .top-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .meta-pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 5px 11px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.16);
+      color: #eef8ff;
+      font-size: 13px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+    }
+
+    .sticky-nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(255, 255, 255, 0.96);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(10px);
+    }
+
+    .nav-inner {
+      max-width: 1320px;
+      margin: 0 auto;
+      display: flex;
+      gap: 8px;
+      padding: 10px 20px;
+      overflow-x: auto;
+    }
+
+    .nav-inner a {
+      flex: 0 0 auto;
+      min-height: 36px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 14px;
+      color: var(--primary-dark);
+      text-decoration: none;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      font-size: 14px;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+
+    .nav-inner a:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: var(--primary-soft);
+    }
+
+    main {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 22px 20px 44px;
+    }
+
+    .module {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin: 0 0 22px;
+      overflow: hidden;
+    }
+
+    .module-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 20px 22px 18px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .module-title {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.25;
+      color: #153b61;
+    }
+
+    .module-subtitle {
+      margin: 7px 0 0;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 14px;
+    }
+
+    .status-chip {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #ecf9f8;
+      color: #076763;
+      border: 1px solid #bce7e2;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .module-body {
+      padding: 22px;
+    }
+
+    .tool-grid {
+      display: grid;
+      grid-template-columns: minmax(280px, 420px) minmax(0, 1fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .panel-header {
+      padding: 13px 15px;
+      background: var(--surface-soft);
+      border-bottom: 1px solid var(--line);
+      font-weight: 750;
+      color: #173c62;
+    }
+
+    .panel-body {
+      padding: 16px;
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .field label,
+    .field-label {
+      display: block;
+      margin-bottom: 6px;
+      color: #27435f;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      min-height: 40px;
+      border: 1px solid var(--line-strong);
+      border-radius: 6px;
+      padding: 9px 10px;
+      color: var(--text);
+      background: #fff;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 150px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(15, 95, 184, 0.12);
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .btn {
+      min-height: 40px;
+      border: 1px solid var(--line-strong);
+      border-radius: 6px;
+      padding: 9px 13px;
+      background: #fff;
+      color: var(--primary-dark);
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: var(--primary-soft);
+    }
+
+    .btn-primary {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: #0a4f9e;
+      color: #fff;
+    }
+
+    .btn-danger {
+      border-color: #f0c2c6;
+      color: var(--danger);
+      background: #fff6f7;
+    }
+
+    .btn-danger:hover {
+      border-color: var(--danger);
+      color: var(--danger);
+      background: #fff0f2;
+    }
+
+    .btn-small {
+      min-height: 32px;
+      padding: 6px 9px;
+      font-size: 13px;
+    }
+
+    .script-output {
+      display: grid;
+      gap: 10px;
+    }
+
+    .script-block {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fbfdff;
+      padding: 13px 14px;
+    }
+
+    .script-time {
+      display: inline-flex;
+      align-items: center;
+      min-height: 25px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .script-block h4 {
+      margin: 0 0 7px;
+      color: #163b61;
+      font-size: 15px;
+    }
+
+    .script-block p {
+      margin: 0;
+      line-height: 1.72;
+      color: #24384d;
+    }
+
+    .notice {
+      margin-top: 12px;
+      padding: 11px 12px;
+      border-radius: var(--radius);
+      border: 1px solid #cfe0f2;
+      background: #f3f8fe;
+      color: #31516f;
+      line-height: 1.55;
+      font-size: 13px;
+    }
+
+    .notice.ok {
+      border-color: #bce7e2;
+      background: #f1fbfa;
+      color: #086762;
+    }
+
+    .notice.warn {
+      border-color: #efd099;
+      background: #fff8eb;
+      color: #7b5004;
+    }
+
+    .table-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .toolbar-spacer {
+      flex: 1 1 160px;
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 980px;
+    }
+
+    th,
+    td {
+      border-bottom: 1px solid var(--line);
+      border-right: 1px solid var(--line);
+      padding: 8px;
+      vertical-align: middle;
+      text-align: left;
+    }
+
+    th:last-child,
+    td:last-child {
+      border-right: 0;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background: #eaf3fc;
+      color: #153b61;
+      font-size: 13px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    td input,
+    td select {
+      min-height: 34px;
+      padding: 6px 8px;
+      border-color: #d5e0eb;
+      font-size: 13px;
+    }
+
+    .date-cell {
+      min-width: 142px;
+    }
+
+    .column-cell {
+      min-width: 160px;
+    }
+
+    .title-cell {
+      min-width: 250px;
+    }
+
+    .platform-cell,
+    .keyword-cell,
+    .owner-cell,
+    .status-cell {
+      min-width: 118px;
+    }
+
+    .notes-cell {
+      min-width: 210px;
+    }
+
+    .number-cell {
+      min-width: 92px;
+    }
+
+    .rate-cell {
+      min-width: 95px;
+      color: #123b61;
+      font-weight: 750;
+      background: #fbfdff;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .metric-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fbfdff;
+      padding: 12px 13px;
+    }
+
+    .metric-label {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 7px;
+    }
+
+    .metric-value {
+      color: #153b61;
+      font-size: 22px;
+      font-weight: 850;
+      line-height: 1.15;
+      word-break: break-word;
+    }
+
+    .sop-layout {
+      display: grid;
+      grid-template-columns: 320px minmax(0, 1fr);
+      gap: 18px;
+    }
+
+    .keyword-list {
+      display: grid;
+      gap: 9px;
+    }
+
+    .keyword-btn {
+      width: 100%;
+      text-align: left;
+      min-height: 42px;
+      border: 1px solid var(--line-strong);
+      border-radius: 6px;
+      background: #fff;
+      color: #1b4169;
+      padding: 9px 12px;
+      font-weight: 750;
+    }
+
+    .keyword-btn.active,
+    .keyword-btn:hover {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .sop-output {
+      white-space: pre-wrap;
+      line-height: 1.72;
+      min-height: 260px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fbfdff;
+      color: #24384d;
+    }
+
+    .compliance-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .compliance-item {
+      padding: 8px 10px;
+      border: 1px solid #f0c2c6;
+      border-radius: 6px;
+      background: #fff6f7;
+      color: #8a1f2a;
+      font-size: 13px;
+      font-weight: 750;
+    }
+
+    .footer-note {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      color: #38546f;
+      padding: 16px 18px;
+      line-height: 1.7;
+      box-shadow: var(--shadow);
+    }
+
+    .footer-note strong {
+      color: #173c62;
+    }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 50;
+      min-width: 210px;
+      max-width: min(380px, calc(100vw - 36px));
+      padding: 12px 14px;
+      border-radius: var(--radius);
+      background: #153b61;
+      color: #fff;
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.18);
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: opacity .18s ease, transform .18s ease;
+      line-height: 1.5;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 980px) {
+      .tool-grid,
+      .sop-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .module-header {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .status-chip {
+        align-self: flex-start;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .app-header {
+        padding: 24px 16px 20px;
+      }
+
+      main {
+        padding: 16px 12px 32px;
+      }
+
+      .module-body,
+      .module-header {
+        padding: 16px;
+      }
+
+      .summary-grid,
+      .compliance-list {
+        grid-template-columns: 1fr;
+      }
+
+      .btn {
+        flex: 1 1 auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-inner">
+      <span class="eyebrow">AUD地产学院 · 私域获客运营台</span>
+      <h1>AUD地产学院运营增长工具</h1>
+      <p class="strategy">我们不是批量发广告，而是在测试一套澳洲房地产私域获客模型。</p>
+      <div class="top-meta" aria-label="工具模块">
+        <span class="meta-pill">短视频脚本</span>
+        <span class="meta-pill">7天 / 30天排期</span>
+        <span class="meta-pill">数据复盘</span>
+        <span class="meta-pill">私信SOP</span>
+        <span class="meta-pill">合规提醒</span>
+      </div>
+    </div>
+  </header>
+
+  <nav class="sticky-nav" aria-label="页面导航">
+    <div class="nav-inner">
+      <a href="#script-module">脚本生成器</a>
+      <a href="#schedule-module">排期表</a>
+      <a href="#review-module">数据复盘表</a>
+      <a href="#sop-module">私信SOP</a>
+      <a href="#compliance-module">合规底线</a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="module" id="script-module">
+      <div class="module-header">
+        <div>
+          <h2 class="module-title">1. 短视频脚本生成器</h2>
+          <p class="module-subtitle">按固定节奏输出口播：0-3秒反常识钩子、3-20秒具体问题、20-40秒三个判断点、40-55秒课堂延伸、55-60秒评论关键词CTA。</p>
+        </div>
+        <span class="status-chip">内置风险词检查</span>
+      </div>
+      <div class="module-body">
+        <div class="tool-grid">
+          <div class="panel">
+            <div class="panel-header">生成参数</div>
+            <div class="panel-body">
+              <div class="form-grid">
+                <div class="field">
+                  <label for="scriptColumn">栏目</label>
+                  <select id="scriptColumn" data-testid="script-column">
+                    <option value="潘总看房屋价值">潘总看房屋价值</option>
+                    <option value="高价成交拆解">高价成交拆解</option>
+                    <option value="今日地产判断">今日地产判断</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="scriptTopic">主题</label>
+                  <input id="scriptTopic" data-testid="script-topic" type="text" value="推倒重建前，怎么判断一块地值不值得看" placeholder="例如：预算有限时先买房还是先看地块">
+                </div>
+                <div class="field">
+                  <label for="scriptKeyword">评论关键词</label>
+                  <input id="scriptKeyword" data-testid="script-keyword" type="text" value="地块" placeholder="例如：地块 / 预算 / 合同 / 流程 / 税改">
+                </div>
+                <div class="button-row">
+                  <button class="btn btn-primary" id="generateScriptBtn" type="button">生成脚本</button>
+                  <button class="btn" id="copyScriptBtn" type="button">复制脚本</button>
+                  <button class="btn" id="clearScriptBtn" type="button">清空主题</button>
+                </div>
+              </div>
+              <div class="notice warn" id="riskNotice">输入内容如含风险词，生成时会自动替换为更合规的表达。</div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-header">脚本结果</div>
+            <div class="panel-body">
+              <div id="scriptResult" class="script-output" data-testid="script-result"></div>
+              <div class="notice ok" id="scriptCompliance">脚本待生成。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="module" id="schedule-module">
+      <div class="module-header">
+        <div>
+          <h2 class="module-title">2. 7天 / 30天排期表</h2>
+          <p class="module-subtitle">内置澳洲房地产获客选题，可直接编辑日期、栏目、标题、平台、关键词、素材状态、负责人和备注。</p>
+        </div>
+        <span class="status-chip">可复制 · 可导出CSV</span>
+      </div>
+      <div class="module-body">
+        <div class="table-toolbar">
+          <button class="btn btn-primary" id="make7Btn" type="button">生成7天排期</button>
+          <button class="btn" id="make30Btn" type="button">生成30天排期</button>
+          <button class="btn" id="addScheduleBtn" type="button">添加一行</button>
+          <span class="toolbar-spacer"></span>
+          <button class="btn" id="copyScheduleBtn" type="button">复制表格</button>
+          <button class="btn" id="exportScheduleBtn" type="button">导出CSV</button>
+          <button class="btn btn-danger" id="clearScheduleBtn" type="button">清空</button>
+        </div>
+        <div class="table-wrap">
+          <table aria-label="排期表">
+            <thead>
+              <tr>
+                <th>日期</th>
+                <th>栏目</th>
+                <th>标题</th>
+                <th>平台</th>
+                <th>评论关键词</th>
+                <th>素材状态</th>
+                <th>负责人</th>
+                <th>备注</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="scheduleBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="module" id="review-module">
+      <div class="module-header">
+        <div>
+          <h2 class="module-title">3. 数据复盘表</h2>
+          <p class="module-subtitle">录入发布数据后自动计算收藏率、评论率、私信率、有效线索率，并按栏目汇总。</p>
+        </div>
+        <span class="status-chip">自动计算栏目效果</span>
+      </div>
+      <div class="module-body">
+        <div class="summary-grid" id="reviewTopMetrics" aria-label="数据总览"></div>
+        <div class="table-toolbar">
+          <button class="btn btn-primary" id="addReviewBtn" type="button">添加一行</button>
+          <button class="btn" id="sampleReviewBtn" type="button">填入示例</button>
+          <span class="toolbar-spacer"></span>
+          <button class="btn" id="copyReviewBtn" type="button">复制复盘表</button>
+          <button class="btn" id="exportReviewBtn" type="button">导出CSV</button>
+          <button class="btn btn-danger" id="clearReviewBtn" type="button">清空</button>
+        </div>
+        <div class="table-wrap">
+          <table aria-label="数据复盘表">
+            <thead>
+              <tr>
+                <th>日期</th>
+                <th>平台</th>
+                <th>栏目</th>
+                <th>标题</th>
+                <th>播放</th>
+                <th>点赞</th>
+                <th>收藏</th>
+                <th>评论</th>
+                <th>私信</th>
+                <th>有效线索</th>
+                <th>课程咨询</th>
+                <th>收藏率</th>
+                <th>评论率</th>
+                <th>私信率</th>
+                <th>有效线索率</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="reviewBody"></tbody>
+          </table>
+        </div>
+        <div class="panel" style="margin-top: 14px;">
+          <div class="panel-header">按栏目汇总</div>
+          <div class="table-wrap" style="border: 0; border-radius: 0;">
+            <table aria-label="栏目汇总">
+              <thead>
+                <tr>
+                  <th>栏目</th>
+                  <th>条数</th>
+                  <th>播放</th>
+                  <th>收藏</th>
+                  <th>评论</th>
+                  <th>私信</th>
+                  <th>有效线索</th>
+                  <th>课程咨询</th>
+                  <th>收藏率</th>
+                  <th>评论率</th>
+                  <th>私信率</th>
+                  <th>有效线索率</th>
+                </tr>
+              </thead>
+              <tbody id="reviewSummaryBody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="notice">有效线索率按“有效线索 / 私信”计算；其他转化率按“对应动作 / 播放”计算。</div>
+      </div>
+    </section>
+
+    <section class="module" id="sop-module">
+      <div class="module-header">
+        <div>
+          <h2 class="module-title">4. 私信SOP</h2>
+          <p class="module-subtitle">根据评论关键词快速切换回复话术，先发资料，再判断用户所处阶段。</p>
+        </div>
+        <span class="status-chip">资料承接 · 阶段分流</span>
+      </div>
+      <div class="module-body">
+        <div class="sop-layout">
+          <div class="panel">
+            <div class="panel-header">关键词</div>
+            <div class="panel-body">
+              <div class="keyword-list" id="keywordList">
+                <button class="keyword-btn active" type="button" data-keyword="地块">地块</button>
+                <button class="keyword-btn" type="button" data-keyword="预算">预算</button>
+                <button class="keyword-btn" type="button" data-keyword="合同">合同</button>
+                <button class="keyword-btn" type="button" data-keyword="流程">流程</button>
+                <button class="keyword-btn" type="button" data-keyword="税改">税改</button>
+              </div>
+              <div class="field" style="margin-top: 14px;">
+                <label for="leadStage">用户阶段</label>
+                <select id="leadStage">
+                  <option value="准备买地">准备买地</option>
+                  <option value="已有地">已有地</option>
+                  <option value="准备推倒重建">准备推倒重建</option>
+                  <option value="想卖房">想卖房</option>
+                  <option value="想贷款">想贷款</option>
+                  <option value="想投资">想投资</option>
+                  <option value="先了解">先了解</option>
+                </select>
+              </div>
+              <div class="button-row" style="margin-top: 14px;">
+                <button class="btn btn-primary" id="copySopBtn" type="button">复制话术</button>
+              </div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-header">回复话术</div>
+            <div class="panel-body">
+              <div id="sopOutput" class="sop-output" data-testid="sop-output"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="module" id="compliance-module">
+      <div class="module-header">
+        <div>
+          <h2 class="module-title">合规底线</h2>
+          <p class="module-subtitle">所有脚本、排期和私信都按知识科普与线索筛选来表达，避免承诺收益或包装不实案例。</p>
+        </div>
+        <span class="status-chip">老板演示版</span>
+      </div>
+      <div class="module-body">
+        <div class="compliance-list">
+          <div class="compliance-item">不说“带大家赚钱”</div>
+          <div class="compliance-item">不说“稳赚”</div>
+          <div class="compliance-item">不说“必涨”</div>
+          <div class="compliance-item">不说“保本”</div>
+          <div class="compliance-item">不说“内部房源”</div>
+          <div class="compliance-item">不说“保证收益”</div>
+        </div>
+        <div class="notice" style="margin-top: 14px;">AI画面只作为概念示意或价值判断辅助画面，不包装成真实房源；公开案例只拆公开信息或典型逻辑，不假装是公司客户案例。</div>
+      </div>
+    </section>
+
+    <div class="footer-note">
+      <strong>统一资料免责声明：</strong>内容仅作澳洲房产知识科普，不构成投资、税务、法律、贷款或建造报价建议；具体情况请咨询持牌专业人士。
+    </div>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (function () {
+      "use strict";
+
+      const $ = (selector) => document.querySelector(selector);
+      const $$ = (selector) => Array.from(document.querySelectorAll(selector));
+
+      const columns = ["潘总看房屋价值", "高价成交拆解", "今日地产判断"];
+      const platforms = ["小红书", "抖音", "视频号", "Instagram", "TikTok"];
+      const materialStatus = ["待收集", "已约潘总", "已约郭总", "已剪辑", "已发布"];
+      const owners = ["悟空姐", "潘总", "郭总", "我", "Codex"];
+      const bannedWords = ["稳赚", "必涨", "带大家赚钱", "保证收益", "内部房源", "保本"];
+      const storageKeys = {
+        schedule: "aud_growth_schedule_v1",
+        review: "aud_growth_review_v1"
+      };
+
+      const topicLibrary = [
+        { column: "潘总看房屋价值", title: "老房价值不是看装修，是看地块还能怎么用", keyword: "地块", material: "潘总开头+街景素材", owner: "悟空姐", notes: "用公开成交逻辑，不说客户案例" },
+        { column: "高价成交拆解", title: "高价成交背后的买家画像", keyword: "卖房", material: "公开成交截图+郭总解释", owner: "郭总", notes: "拆买家心理与确定性" },
+        { column: "今日地产判断", title: "本周看房先看预算边界", keyword: "预算", material: "郭总知识点", owner: "我", notes: "引导课程预算清单" },
+        { column: "潘总看房屋价值", title: "为什么同一条街价格差几十万", keyword: "评估", material: "潘总开头", owner: "潘总", notes: "强调地块、朝向、翻新程度" },
+        { column: "高价成交拆解", title: "为什么这个房子能引发多人竞争", keyword: "合同", material: "拍卖现场/公开页面", owner: "悟空姐", notes: "不要夸大成交原因" },
+        { column: "今日地产判断", title: "利率变化下买家该先问什么", keyword: "贷款", material: "郭总知识点", owner: "郭总", notes: "不作贷款报价承诺" },
+        { column: "潘总看房屋价值", title: "推倒重建前先看这5个条件", keyword: "流程", material: "潘总转场+地块画面", owner: "潘总", notes: "坡度、树、排水、面宽、规划" },
+        { column: "高价成交拆解", title: "区域成交价高不是只因为房子新", keyword: "成交", material: "公开成交资料", owner: "我", notes: "讲逻辑，不下结论" },
+        { column: "今日地产判断", title: "税改消息出来后不要只看标题", keyword: "税改", material: "政策标题截图", owner: "郭总", notes: "提示咨询税务师" },
+        { column: "潘总看房屋价值", title: "这类地块不要只被低价吸引", keyword: "地块", material: "AI示意+潘总点评", owner: "悟空姐", notes: "AI画面标注概念示意" },
+        { column: "高价成交拆解", title: "卖房前哪三个动作影响询盘质量", keyword: "卖房", material: "潘总结尾", owner: "潘总", notes: "承接卖房评估" },
+        { column: "今日地产判断", title: "贷款预批和选房顺序怎么排", keyword: "贷款", material: "郭总解释", owner: "郭总", notes: "引导阶段分流" },
+        { column: "潘总看房屋价值", title: "面宽、坡度、树木，哪个最容易被忽略", keyword: "地块", material: "地块航拍/街景", owner: "我", notes: "用课堂清单承接" },
+        { column: "高价成交拆解", title: "好照片之外，真正影响成交的是叙事", keyword: "卖房", material: "卖房素材", owner: "悟空姐", notes: "适合小红书图文+短视频" },
+        { column: "今日地产判断", title: "预算不足时先缩面积还是换区域", keyword: "预算", material: "郭总知识点", owner: "我", notes: "避免建议具体投资动作" },
+        { column: "潘总看房屋价值", title: "买房送地到底在买什么", keyword: "地块", material: "潘总开头", owner: "潘总", notes: "解释土地价值和使用目标" },
+        { column: "高价成交拆解", title: "买家愿意加价的三个确定性", keyword: "合同", material: "公开案例逻辑", owner: "郭总", notes: "强调确定性不是收益承诺" },
+        { column: "今日地产判断", title: "准备推倒重建的人先做哪一步", keyword: "流程", material: "潘总+郭总", owner: "悟空姐", notes: "引导线下课" },
+        { column: "潘总看房屋价值", title: "房产评估前要准备哪三类资料", keyword: "评估", material: "清单画面", owner: "我", notes: "评论区领取资料" },
+        { column: "高价成交拆解", title: "拍卖前两周要盯哪些信号", keyword: "成交", material: "公开拍卖信息", owner: "郭总", notes: "不做价格预测" },
+        { column: "今日地产判断", title: "买家中介适合什么阶段", keyword: "流程", material: "郭总知识点", owner: "我", notes: "区分自住、投资、换房" },
+        { column: "潘总看房屋价值", title: "装修好看但价值未必高的原因", keyword: "装修", material: "装修对比画面", owner: "潘总", notes: "承接装修设计咨询" },
+        { column: "高价成交拆解", title: "同样房型为什么报价策略不同", keyword: "卖房", material: "公开价格区间", owner: "悟空姐", notes: "解释定位与买家池" },
+        { column: "今日地产判断", title: "装修设计前先确定使用目标", keyword: "装修", material: "设计图/概念示意", owner: "郭总", notes: "AI图标注概念示意" },
+        { column: "潘总看房屋价值", title: "地块评估里最容易误判的成本", keyword: "预算", material: "潘总开头+字幕", owner: "我", notes: "成本只讲框架" },
+        { column: "高价成交拆解", title: "高价成交案例如何避免过度解读", keyword: "成交", material: "郭总解释", owner: "郭总", notes: "合规表达风险边界" },
+        { column: "今日地产判断", title: "课程咨询常见问题集中答", keyword: "课程", material: "课程信息", owner: "悟空姐", notes: "100澳币/年/12节线下课" },
+        { column: "潘总看房屋价值", title: "自住和投资看价值的顺序不一样", keyword: "地块", material: "潘总开头", owner: "潘总", notes: "强调阶段不同判断不同" },
+        { column: "高价成交拆解", title: "卖房时如何把房屋短板讲清楚", keyword: "卖房", material: "卖房案例逻辑", owner: "我", notes: "不隐瞒风险，不夸大优势" },
+        { column: "今日地产判断", title: "下周内容测试：地块、预算、流程", keyword: "流程", material: "周报截图", owner: "Codex", notes: "复盘后保留高线索选题" }
+      ];
+
+      let scheduleRows = loadRows(storageKeys.schedule) || buildSchedule(7);
+      let reviewRows = loadRows(storageKeys.review) || sampleReviewRows();
+      let currentSopKeyword = "地块";
+      let lastScriptText = "";
+
+      function escapeHtml(value) {
+        return String(value ?? "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      function todayString(offsetDays) {
+        const date = new Date();
+        date.setDate(date.getDate() + offsetDays);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        return `${year}-${month}-${day}`;
+      }
+
+      function loadRows(key) {
+        try {
+          const raw = localStorage.getItem(key);
+          if (!raw) return null;
+          const parsed = JSON.parse(raw);
+          return Array.isArray(parsed) ? parsed : null;
+        } catch (error) {
+          return null;
+        }
+      }
+
+      function saveRows(key, rows) {
+        localStorage.setItem(key, JSON.stringify(rows));
+      }
+
+      function showToast(message) {
+        const toast = $("#toast");
+        toast.textContent = message;
+        toast.classList.add("show");
+        window.clearTimeout(showToast.timer);
+        showToast.timer = window.setTimeout(() => toast.classList.remove("show"), 1900);
+      }
+
+      function hasBannedWords(text) {
+        return bannedWords.filter((word) => text.includes(word));
+      }
+
+      function sanitizeInput(text) {
+        let next = String(text || "").trim();
+        const replacements = {
+          "稳赚": "更稳妥地判断风险",
+          "必涨": "存在变化空间",
+          "带大家赚钱": "一起建立判断框架",
+          "保证收益": "明确风险边界",
+          "内部房源": "公开信息",
+          "保本": "控制预算风险"
+        };
+        Object.entries(replacements).forEach(([from, to]) => {
+          next = next.split(from).join(to);
+        });
+        return next;
+      }
+
+      function generateScript() {
+        const column = $("#scriptColumn").value;
+        const rawTopic = $("#scriptTopic").value;
+        const rawKeyword = $("#scriptKeyword").value;
+        const riskWords = hasBannedWords(`${rawTopic} ${rawKeyword}`);
+        const topic = sanitizeInput(rawTopic) || "澳洲房产判断";
+        const keyword = sanitizeInput(rawKeyword) || "资料";
+
+        const hooks = {
+          "潘总看房屋价值": "很多人以为房屋价值先看装修，其实第一眼更该看土地条件和下一步使用空间。",
+          "高价成交拆解": "高价成交不一定是房子本身赢了，往往是买家为确定性和稀缺性买单。",
+          "今日地产判断": "今天先不问能不能追热点，先问这个机会适不适合你现在的阶段。"
+        };
+
+        const questionMap = {
+          "潘总看房屋价值": `今天用“${topic}”做一个判断。很多人只看房龄、装修、照片好不好看，却忽略了地块尺寸、朝向、坡度、树木和周边成交。结果是看房很努力，但不知道真正影响价值的变量在哪里。`,
+          "高价成交拆解": `今天拆“${topic}”。很多人看到高价成交只会说市场热，但真正要看的是：买家为什么愿意竞争、这套房解决了什么痛点、卖方有没有把关键优势讲清楚。`,
+          "今日地产判断": `今天聊“${topic}”。很多人刷到政策、利率、成交新闻就焦虑，但如果没有先确认预算、阶段和目标，任何信息都容易变成情绪噪音。`
+        };
+
+        const pointMap = {
+          "潘总看房屋价值": [
+            "第一，看土地本身：面积、面宽、坡度、朝向、树木和排水，会直接影响后续选择。",
+            "第二，看可改造空间：推倒重建、装修设计、加建，都要先回到规划和审批边界。",
+            "第三，看成交参照：不是只看最高价，而是看同区域、同土地条件、同买家需求下的价格区间。"
+          ],
+          "高价成交拆解": [
+            "第一，看买家画像：自住、换房、学区、通勤、生活方式，不同人群愿意为不同确定性付费。",
+            "第二，看房源叙事：卖点要能被买家快速理解，短板也要提前解释清楚。",
+            "第三，看成交环境：同区供应量、开放日反馈、报价策略和竞拍节奏，会一起影响结果。"
+          ],
+          "今日地产判断": [
+            "第一，看外部变量：利率、政策、供应和区域成交，只能作为判断背景。",
+            "第二，看个人阶段：准备买地、已有地、想卖房、想贷款，每个阶段该问的问题不同。",
+            "第三，看行动边界：先确认预算、时间表和能承受的风险，再决定下一步咨询谁。"
+          ]
+        };
+
+        const segments = [
+          {
+            time: "0-3秒",
+            title: "反常识钩子",
+            text: `反常识一点：${hooks[column]}`
+          },
+          {
+            time: "3-20秒",
+            title: "具体问题",
+            text: questionMap[column]
+          },
+          {
+            time: "20-40秒",
+            title: "三个判断点",
+            text: pointMap[column].join(" ")
+          },
+          {
+            time: "40-55秒",
+            title: "AUD地产学院课堂延伸",
+            text: "AUD地产学院会把这类问题放到线下课里拆：怎么读地块、怎么看成交、怎么拆预算、怎么判断下一步该问谁。100澳币/年，12节线下课，适合先建立澳洲房产判断框架。"
+          },
+          {
+            time: "55-60秒",
+            title: "评论关键词CTA",
+            text: `想要“${keyword}”资料，在评论区打“${keyword}”。我会先把清单发你，再根据你的阶段补充重点。`
+          }
+        ];
+
+        const output = segments.map((segment) => {
+          return `
+            <div class="script-block">
+              <span class="script-time">${escapeHtml(segment.time)}</span>
+              <h4>${escapeHtml(segment.title)}</h4>
+              <p>${escapeHtml(segment.text)}</p>
+            </div>
+          `;
+        }).join("");
+
+        $("#scriptResult").innerHTML = output;
+        lastScriptText = segments.map((segment) => `${segment.time} ${segment.title}\n${segment.text}`).join("\n\n");
+
+        const resultRisk = hasBannedWords(lastScriptText);
+        const compliance = $("#scriptCompliance");
+        if (resultRisk.length) {
+          compliance.className = "notice warn";
+          compliance.textContent = `请复核：脚本仍包含风险表达：${resultRisk.join("、")}`;
+        } else if (riskWords.length) {
+          compliance.className = "notice ok";
+          compliance.textContent = `已自动替换输入中的风险词：${riskWords.join("、")}。脚本结果未检出风险表达。`;
+        } else {
+          compliance.className = "notice ok";
+          compliance.textContent = "脚本结果未检出风险表达，可进入拍摄或再人工润色。";
+        }
+      }
+
+      function buildSchedule(days) {
+        return Array.from({ length: days }, (_, index) => {
+          const item = topicLibrary[index % topicLibrary.length];
+          return {
+            date: todayString(index),
+            column: item.column,
+            title: item.title,
+            platform: platforms[index % 3],
+            keyword: item.keyword,
+            status: index < 2 ? "已约潘总" : "待收集",
+            owner: item.owner,
+            notes: item.notes
+          };
+        });
+      }
+
+      function optionHtml(value, selectedValue) {
+        const selected = value === selectedValue ? " selected" : "";
+        return `<option value="${escapeHtml(value)}"${selected}>${escapeHtml(value)}</option>`;
+      }
+
+      function renderSchedule() {
+        const body = $("#scheduleBody");
+        body.innerHTML = scheduleRows.map((row, index) => `
+          <tr data-index="${index}">
+            <td class="date-cell"><input type="date" data-key="date" value="${escapeHtml(row.date)}"></td>
+            <td class="column-cell"><select data-key="column">${columns.map((item) => optionHtml(item, row.column)).join("")}</select></td>
+            <td class="title-cell"><input type="text" data-key="title" value="${escapeHtml(row.title)}"></td>
+            <td class="platform-cell"><select data-key="platform">${platforms.map((item) => optionHtml(item, row.platform)).join("")}</select></td>
+            <td class="keyword-cell"><input type="text" data-key="keyword" value="${escapeHtml(row.keyword)}"></td>
+            <td class="status-cell"><select data-key="status">${materialStatus.map((item) => optionHtml(item, row.status)).join("")}</select></td>
+            <td class="owner-cell"><select data-key="owner">${owners.map((item) => optionHtml(item, row.owner)).join("")}</select></td>
+            <td class="notes-cell"><input type="text" data-key="notes" value="${escapeHtml(row.notes)}"></td>
+            <td><button class="btn btn-small btn-danger" type="button" data-delete-schedule="${index}">删除</button></td>
+          </tr>
+        `).join("");
+        saveRows(storageKeys.schedule, scheduleRows);
+      }
+
+      function updateScheduleFromInput(event) {
+        const target = event.target;
+        if (!target.dataset.key) return;
+        const row = target.closest("tr");
+        if (!row) return;
+        const index = Number(row.dataset.index);
+        scheduleRows[index][target.dataset.key] = target.value;
+        saveRows(storageKeys.schedule, scheduleRows);
+      }
+
+      const scheduleFields = ["日期", "栏目", "标题", "平台", "评论关键词", "素材状态", "负责人", "备注"];
+      const scheduleKeys = ["date", "column", "title", "platform", "keyword", "status", "owner", "notes"];
+
+      function rowsToText(rows, headers, keys) {
+        return [headers.join("\t")]
+          .concat(rows.map((row) => keys.map((key) => String(row[key] ?? "").replace(/\s+/g, " ").trim()).join("\t")))
+          .join("\n");
+      }
+
+      function csvEscape(value) {
+        const text = String(value ?? "").replace(/\r?\n/g, " ");
+        return /[",\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+      }
+
+      function exportCsv(filename, rows, headers, keys) {
+        const csv = "\uFEFF" + [headers.map(csvEscape).join(",")]
+          .concat(rows.map((row) => keys.map((key) => csvEscape(row[key])).join(",")))
+          .join("\n");
+        const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(url);
+      }
+
+      async function copyText(text, message) {
+        try {
+          await navigator.clipboard.writeText(text);
+        } catch (error) {
+          const textarea = document.createElement("textarea");
+          textarea.value = text;
+          textarea.style.position = "fixed";
+          textarea.style.left = "-9999px";
+          document.body.appendChild(textarea);
+          textarea.focus();
+          textarea.select();
+          document.execCommand("copy");
+          textarea.remove();
+        }
+        showToast(message);
+      }
+
+      function numberValue(value) {
+        const number = Number(value);
+        return Number.isFinite(number) && number > 0 ? Math.round(number) : 0;
+      }
+
+      function percent(part, total) {
+        if (!total) return "0.00%";
+        return `${((part / total) * 100).toFixed(2)}%`;
+      }
+
+      function sampleReviewRows() {
+        return [
+          { date: todayString(-6), platform: "小红书", column: "潘总看房屋价值", title: "推倒重建前先看这5个条件", views: 4200, likes: 168, saves: 210, comments: 46, dms: 25, leads: 9, course: 5 },
+          { date: todayString(-5), platform: "抖音", column: "高价成交拆解", title: "高价成交背后的买家画像", views: 6800, likes: 204, saves: 136, comments: 58, dms: 19, leads: 6, course: 3 },
+          { date: todayString(-4), platform: "视频号", column: "今日地产判断", title: "本周看房先看预算边界", views: 3100, likes: 92, saves: 121, comments: 33, dms: 18, leads: 7, course: 4 },
+          { date: todayString(-3), platform: "小红书", column: "潘总看房屋价值", title: "为什么同一条街价格差几十万", views: 5200, likes: 186, saves: 265, comments: 61, dms: 34, leads: 12, course: 6 },
+          { date: todayString(-2), platform: "抖音", column: "今日地产判断", title: "税改消息出来后不要只看标题", views: 3900, likes: 118, saves: 156, comments: 42, dms: 22, leads: 8, course: 5 },
+          { date: todayString(-1), platform: "小红书", column: "高价成交拆解", title: "卖房前哪三个动作影响询盘质量", views: 4700, likes: 151, saves: 178, comments: 39, dms: 28, leads: 11, course: 6 }
+        ];
+      }
+
+      function blankReviewRow() {
+        return {
+          date: todayString(0),
+          platform: "小红书",
+          column: "潘总看房屋价值",
+          title: "",
+          views: 0,
+          likes: 0,
+          saves: 0,
+          comments: 0,
+          dms: 0,
+          leads: 0,
+          course: 0
+        };
+      }
+
+      function calcReview(row) {
+        const views = numberValue(row.views);
+        const dms = numberValue(row.dms);
+        return {
+          saveRate: percent(numberValue(row.saves), views),
+          commentRate: percent(numberValue(row.comments), views),
+          dmRate: percent(dms, views),
+          leadRate: percent(numberValue(row.leads), dms)
+        };
+      }
+
+      function renderReview() {
+        const body = $("#reviewBody");
+        body.innerHTML = reviewRows.map((row, index) => {
+          const rates = calcReview(row);
+          return `
+            <tr data-index="${index}">
+              <td class="date-cell"><input type="date" data-key="date" value="${escapeHtml(row.date)}"></td>
+              <td class="platform-cell"><select data-key="platform">${platforms.map((item) => optionHtml(item, row.platform)).join("")}</select></td>
+              <td class="column-cell"><select data-key="column">${columns.map((item) => optionHtml(item, row.column)).join("")}</select></td>
+              <td class="title-cell"><input type="text" data-key="title" value="${escapeHtml(row.title)}"></td>
+              <td class="number-cell"><input type="number" min="0" step="1" data-key="views" value="${numberValue(row.views)}"></td>
+              <td class="number-cell"><input type="number" min="0" step="1" data-key="likes" value="${numberValue(row.likes)}"></td>
+              <td class="number-cell"><input type="number" min="0" step="1" data-key="saves" value="${numberValue(row.saves)}"></td>
+              <td class="number-cell"><input type="number" min="0" step="1" data-key="comments" value="${numberValue(row.comments)}"></td>
+              <td class="number-cell"><input type="number" min="0" step="1" data-key="dms" value="${numberValue(row.dms)}"></td>
+              <td class="number-cell"><input type="number" min="0" step="1" data-key="leads" value="${numberValue(row.leads)}"></td>
+              <td class="number-cell"><input type="number" min="0" step="1" data-key="course" value="${numberValue(row.course)}"></td>
+              <td class="rate-cell" data-rate="saveRate">${rates.saveRate}</td>
+              <td class="rate-cell" data-rate="commentRate">${rates.commentRate}</td>
+              <td class="rate-cell" data-rate="dmRate">${rates.dmRate}</td>
+              <td class="rate-cell" data-rate="leadRate">${rates.leadRate}</td>
+              <td><button class="btn btn-small btn-danger" type="button" data-delete-review="${index}">删除</button></td>
+            </tr>
+          `;
+        }).join("");
+        renderReviewSummary();
+        renderTopMetrics();
+        saveRows(storageKeys.review, reviewRows);
+      }
+
+      function updateReviewFromInput(event) {
+        const target = event.target;
+        if (!target.dataset.key) return;
+        const row = target.closest("tr");
+        if (!row) return;
+        const index = Number(row.dataset.index);
+        const key = target.dataset.key;
+        reviewRows[index][key] = ["views", "likes", "saves", "comments", "dms", "leads", "course"].includes(key)
+          ? numberValue(target.value)
+          : target.value;
+        const rates = calcReview(reviewRows[index]);
+        row.querySelector('[data-rate="saveRate"]').textContent = rates.saveRate;
+        row.querySelector('[data-rate="commentRate"]').textContent = rates.commentRate;
+        row.querySelector('[data-rate="dmRate"]').textContent = rates.dmRate;
+        row.querySelector('[data-rate="leadRate"]').textContent = rates.leadRate;
+        renderReviewSummary();
+        renderTopMetrics();
+        saveRows(storageKeys.review, reviewRows);
+      }
+
+      function aggregateReview() {
+        const groups = new Map();
+        reviewRows.forEach((row) => {
+          const key = row.column || "未选择栏目";
+          if (!groups.has(key)) {
+            groups.set(key, { column: key, count: 0, views: 0, saves: 0, comments: 0, dms: 0, leads: 0, course: 0 });
+          }
+          const group = groups.get(key);
+          group.count += 1;
+          group.views += numberValue(row.views);
+          group.saves += numberValue(row.saves);
+          group.comments += numberValue(row.comments);
+          group.dms += numberValue(row.dms);
+          group.leads += numberValue(row.leads);
+          group.course += numberValue(row.course);
+        });
+        return Array.from(groups.values()).sort((a, b) => b.leads - a.leads || b.views - a.views);
+      }
+
+      function renderReviewSummary() {
+        const summary = aggregateReview();
+        const body = $("#reviewSummaryBody");
+        if (!summary.length) {
+          body.innerHTML = `<tr><td colspan="12">暂无数据</td></tr>`;
+          return;
+        }
+        body.innerHTML = summary.map((row) => `
+          <tr>
+            <td>${escapeHtml(row.column)}</td>
+            <td>${row.count}</td>
+            <td>${row.views}</td>
+            <td>${row.saves}</td>
+            <td>${row.comments}</td>
+            <td>${row.dms}</td>
+            <td>${row.leads}</td>
+            <td>${row.course}</td>
+            <td class="rate-cell">${percent(row.saves, row.views)}</td>
+            <td class="rate-cell">${percent(row.comments, row.views)}</td>
+            <td class="rate-cell">${percent(row.dms, row.views)}</td>
+            <td class="rate-cell">${percent(row.leads, row.dms)}</td>
+          </tr>
+        `).join("");
+      }
+
+      function renderTopMetrics() {
+        const totals = reviewRows.reduce((acc, row) => {
+          acc.views += numberValue(row.views);
+          acc.dms += numberValue(row.dms);
+          acc.leads += numberValue(row.leads);
+          acc.course += numberValue(row.course);
+          return acc;
+        }, { views: 0, dms: 0, leads: 0, course: 0 });
+        $("#reviewTopMetrics").innerHTML = [
+          ["总播放", totals.views],
+          ["总私信", totals.dms],
+          ["有效线索", totals.leads],
+          ["课程咨询", totals.course]
+        ].map(([label, value]) => `
+          <div class="metric-card">
+            <div class="metric-label">${label}</div>
+            <div class="metric-value">${value}</div>
+          </div>
+        `).join("");
+      }
+
+      const reviewFields = ["日期", "平台", "栏目", "标题", "播放", "点赞", "收藏", "评论", "私信", "有效线索", "课程咨询", "收藏率", "评论率", "私信率", "有效线索率"];
+      const reviewKeys = ["date", "platform", "column", "title", "views", "likes", "saves", "comments", "dms", "leads", "course"];
+
+      function reviewRowsForExport() {
+        return reviewRows.map((row) => {
+          const rates = calcReview(row);
+          return {
+            ...row,
+            saveRate: rates.saveRate,
+            commentRate: rates.commentRate,
+            dmRate: rates.dmRate,
+            leadRate: rates.leadRate
+          };
+        });
+      }
+
+      function reviewTextForCopy() {
+        const keys = reviewKeys.concat(["saveRate", "commentRate", "dmRate", "leadRate"]);
+        return rowsToText(reviewRowsForExport(), reviewFields, keys);
+      }
+
+      const sopData = {
+        "地块": {
+          doc: "《澳洲地块判断清单》",
+          body: "你可以补充 suburb、地块面积、房屋大概状态、是否临主路、是否有明显坡度或大树。我们先按土地条件、规划边界、周边成交和后续使用目标做初步分层。"
+        },
+        "预算": {
+          doc: "《买房与推倒重建预算拆分表》",
+          body: "预算先不要只看买价，建议拆成地价、印花税与持有成本、设计审批、建造或装修、贷款缓冲和不可预见费用。这样后面看房不会被单一价格带着跑。"
+        },
+        "合同": {
+          doc: "《澳洲买房合同常见检查点》",
+          body: "合同细节建议同步给持牌 conveyancer 或律师确认。我们可以先帮你把常见关注点列出来，比如冷静期、特殊条款、成交条件、交割时间和已披露资料。"
+        },
+        "流程": {
+          doc: "《澳洲买房/卖房/推倒重建流程图》",
+          body: "先按阶段走：目标确认、预算和贷款边界、标的筛选或房产评估、专业人士复核、执行与复盘。你在哪一步卡住，后面的话术和资料就不一样。"
+        },
+        "税改": {
+          doc: "《税改消息解读问题清单》",
+          body: "税务相关内容需要注册税务师结合个人情况确认。我们先把你需要问清楚的问题列出来：身份、持有目的、持有周期、现金流、未来出售或换房计划。"
+        }
+      };
+
+      const stageAdvice = {
+        "准备买地": "下一步建议先确认区域、预算上限、贷款预批和可接受的地块限制，再决定是否需要做地块初筛。",
+        "已有地": "下一步可以先看 zoning、地块限制、现房状态、服务接入和周边成交，再决定推倒重建、装修或持有。",
+        "准备推倒重建": "下一步先拆流程：地块可行性、设计方向、审批路径、建造预算和时间安排，不要一上来只问总价。",
+        "想卖房": "下一步先做房产/地块评估，再确定目标买家、上市节奏、展示素材和报价策略。",
+        "想贷款": "下一步建议先和贷款经纪确认可贷额度、还款压力、预批时效和资料准备，再回到看房范围。",
+        "想投资": "下一步先明确现金流、持有周期、风险承受和退出路径，具体税务与法律问题请找持牌专业人士确认。",
+        "先了解": "下一步可以先来AUD地产学院线下课，把买地、买房、卖房、贷款、装修和评估的基础框架搭起来。"
+      };
+
+      function renderSop() {
+        const stage = $("#leadStage").value;
+        const data = sopData[currentSopKeyword];
+        const text = `资料先发你：这份${data.doc}可以先看。\n\n方便我把重点发准一点，你现在大概处在哪个阶段：准备买地 / 已有地 / 准备推倒重建 / 想卖房 / 想贷款 / 想投资 / 先了解？\n\n如果你现在是【${stage}】：${stageAdvice[stage]}\n\n关键词【${currentSopKeyword}】补充：${data.body}\n\nAUD地产学院是100澳币/年，12节线下课，适合先建立澳洲房地产判断框架。内容仅作澳洲房产知识科普，不构成投资、税务、法律、贷款或建造报价建议；具体情况请咨询持牌专业人士。`;
+        $("#sopOutput").textContent = text;
+      }
+
+      function bindEvents() {
+        $("#generateScriptBtn").addEventListener("click", generateScript);
+        $("#copyScriptBtn").addEventListener("click", () => {
+          if (!lastScriptText) generateScript();
+          copyText(lastScriptText, "脚本已复制");
+        });
+        $("#clearScriptBtn").addEventListener("click", () => {
+          $("#scriptTopic").value = "";
+          $("#scriptKeyword").value = "";
+          $("#scriptResult").innerHTML = "";
+          $("#scriptCompliance").className = "notice";
+          $("#scriptCompliance").textContent = "脚本待生成。";
+          lastScriptText = "";
+        });
+
+        $("#make7Btn").addEventListener("click", () => {
+          scheduleRows = buildSchedule(7);
+          renderSchedule();
+          showToast("已生成7天排期");
+        });
+        $("#make30Btn").addEventListener("click", () => {
+          scheduleRows = buildSchedule(30);
+          renderSchedule();
+          showToast("已生成30天排期");
+        });
+        $("#addScheduleBtn").addEventListener("click", () => {
+          scheduleRows.push({
+            date: todayString(scheduleRows.length),
+            column: "潘总看房屋价值",
+            title: "",
+            platform: "小红书",
+            keyword: "地块",
+            status: "待收集",
+            owner: "悟空姐",
+            notes: ""
+          });
+          renderSchedule();
+          showToast("已添加排期");
+        });
+        $("#copyScheduleBtn").addEventListener("click", () => {
+          copyText(rowsToText(scheduleRows, scheduleFields, scheduleKeys), "排期表已复制");
+        });
+        $("#exportScheduleBtn").addEventListener("click", () => {
+          exportCsv("AUD地产学院排期表.csv", scheduleRows, scheduleFields, scheduleKeys);
+          showToast("CSV已导出");
+        });
+        $("#clearScheduleBtn").addEventListener("click", () => {
+          if (!confirm("确认清空排期表吗？")) return;
+          scheduleRows = [];
+          renderSchedule();
+          showToast("排期表已清空");
+        });
+        $("#scheduleBody").addEventListener("input", updateScheduleFromInput);
+        $("#scheduleBody").addEventListener("change", updateScheduleFromInput);
+        $("#scheduleBody").addEventListener("click", (event) => {
+          const index = event.target.dataset.deleteSchedule;
+          if (index === undefined) return;
+          scheduleRows.splice(Number(index), 1);
+          renderSchedule();
+          showToast("已删除排期");
+        });
+
+        $("#addReviewBtn").addEventListener("click", () => {
+          reviewRows.push(blankReviewRow());
+          renderReview();
+          showToast("已添加复盘行");
+        });
+        $("#sampleReviewBtn").addEventListener("click", () => {
+          reviewRows = sampleReviewRows();
+          renderReview();
+          showToast("已填入示例数据");
+        });
+        $("#copyReviewBtn").addEventListener("click", () => {
+          copyText(reviewTextForCopy(), "复盘表已复制");
+        });
+        $("#exportReviewBtn").addEventListener("click", () => {
+          const rows = reviewRowsForExport();
+          const keys = reviewKeys.concat(["saveRate", "commentRate", "dmRate", "leadRate"]);
+          exportCsv("AUD地产学院数据复盘表.csv", rows, reviewFields, keys);
+          showToast("CSV已导出");
+        });
+        $("#clearReviewBtn").addEventListener("click", () => {
+          if (!confirm("确认清空复盘表吗？")) return;
+          reviewRows = [];
+          renderReview();
+          showToast("复盘表已清空");
+        });
+        $("#reviewBody").addEventListener("input", updateReviewFromInput);
+        $("#reviewBody").addEventListener("change", updateReviewFromInput);
+        $("#reviewBody").addEventListener("click", (event) => {
+          const index = event.target.dataset.deleteReview;
+          if (index === undefined) return;
+          reviewRows.splice(Number(index), 1);
+          renderReview();
+          showToast("已删除复盘行");
+        });
+
+        $("#keywordList").addEventListener("click", (event) => {
+          const button = event.target.closest("[data-keyword]");
+          if (!button) return;
+          currentSopKeyword = button.dataset.keyword;
+          $$(".keyword-btn").forEach((item) => item.classList.toggle("active", item === button));
+          renderSop();
+        });
+        $("#leadStage").addEventListener("change", renderSop);
+        $("#copySopBtn").addEventListener("click", () => {
+          copyText($("#sopOutput").textContent, "私信话术已复制");
+        });
+      }
+
+      bindEvents();
+      generateScript();
+      renderSchedule();
+      renderReview();
+      renderSop();
+    })();
+  </script>
+</body>
+</html>
